@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WS Step 01: Minimal Connection</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #status {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .connected {
+      color: green;
+    }
+
+    .disconnected {
+      color: red;
+    }
+
+    #log {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>WebSocket Step 01</h1>
+  <div id="status">Status: <span class="disconnected">Disconnected</span></div>
+
+  <button id="sendBtn" disabled>Send "Hello Server!"</button>
+
+  <h3>Messages:</h3>
+  <div id="log"></div>
+
+  <script>
+    const statusEl = document.querySelector('#status span'); // .querySelector() คือการเลือก element จาก DOM
+    const logEl = document.querySelector('#log'); 
+    const sendBtn = document.querySelector('#sendBtn'); 
+
+    // 1. สร้างการเชื่อมต่อกับ Server (Handshake)
+    const socket = new WebSocket('ws://localhost:8080');
+
+    // 2. ฟัง Event 'open' (เชื่อมต่อสำเร็จ)
+    socket.onopen = () => {
+      statusEl.textContent = 'Connected';
+      statusEl.className = 'connected';
+      sendBtn.disabled = false;
+      addLog('Connection opened');
+    };
+
+    // 3. ฟัง Event 'message' (ได้รับข้อมูลจาก Server)
+    // เมื่อ Server ส่ง ws.send() มา ฝั่ง Client จะได้รับผ่าน onmessage และนำข้อมูลไปแสดง
+    socket.onmessage = (event) => {
+      addLog(`Server says: ${event.data}`);
+    };
+
+    // 4. ฟัง Event 'close' (การเชื่อมต่อถูกปิด)
+    socket.onclose = () => {
+      statusEl.textContent = 'Disconnected';
+      statusEl.className = 'disconnected';
+      sendBtn.disabled = true;
+      addLog('Connection closed');
+    };
+
+    // 5. เมื่อกดปุ่ม ให้ส่งข้อมูลไปหา Server
+    sendBtn.onclick = () => {
+      const msg = 'Hello Server! I am client.';
+      socket.send(msg);
+      addLog(`Sent: ${msg}`);
+    };
+
+    function addLog(msg) {
+      const div = document.createElement('div');
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+  </script>
+</body>
+
+</html>
