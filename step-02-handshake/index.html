@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WS Step 02: Handshake Deep-Dive</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #status {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .connected {
+      color: green;
+    }
+
+    .disconnected {
+      color: red;
+    }
+
+    #log {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      height: 300px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>WebSocket Step 02: Handshake</h1>
+  <div id="status">Status: <span class="disconnected">Disconnected</span></div>
+
+  <h3>Connection Log:</h3>
+  <div id="log"></div>
+
+  <script>
+    const statusEl = document.querySelector('#status span');
+    const logEl = document.querySelector('#log');
+
+    addLog('Attempting to connect to ws://localhost:8080 ...');
+    addLog('Browser is sending HTTP Upgrade request now...');
+
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      statusEl.textContent = 'Connected (Handshake Success!)';
+      statusEl.className = 'connected';
+      addLog('Handshake completed! Protocol upgraded to WebSocket.');
+      addLog('Check your Server terminal to see the raw headers!');
+    };
+
+    socket.onerror = (err) => {
+      addLog('Connection failed. Check if server is running.');
+    };
+
+    socket.onclose = (event) => {
+      statusEl.textContent = 'Disconnected';
+      statusEl.className = 'disconnected';
+      addLog(`Connection closed (code: ${event.code}, reason: ${event.reason || 'none'})`);
+    };
+
+    function addLog(msg) {
+      const div = document.createElement('div');
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+  </script>
+</body>
+
+</html>
