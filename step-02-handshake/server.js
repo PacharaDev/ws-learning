@@ -28,6 +28,15 @@ server.on("upgrade", (req, socket, head) => {
   const clientKey = req.headers["sec-websocket-key"];
   console.log(`\nClient Key: ${clientKey}`);
 
+  const hasVipAccess = req.url.includes("clientId=vip-user");
+
+  if (!hasVipAccess) {
+    console.log("Access Denied User is not VIP");
+    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n")
+    socket.destroy();
+    return;
+  }
+
   // คำนวณ Accept Key ตาม RFC 6455:
   // สูตร: Base64( SHA-1( clientKey + MAGIC_GUID ) )
   const acceptKey = crypto

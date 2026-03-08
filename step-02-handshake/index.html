@@ -51,7 +51,7 @@
     addLog('Attempting to connect to ws://localhost:8080 ...');
     addLog('Browser is sending HTTP Upgrade request now...');
 
-    const socket = new WebSocket('ws://localhost:8080');
+    const socket = new WebSocket('ws://localhost:8080?clientId=vip-user');
 
     socket.onopen = () => {
       statusEl.textContent = 'Connected (Handshake Success!)';
