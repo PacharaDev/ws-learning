@@ -19,8 +19,8 @@
 
 เริ่มจากเข้าใจว่า connection เกิดขึ้นและจบลงอย่างไร ก่อนจะไปทำอะไรซับซ้อน
 
-- [ ] **Step 01: Minimal Connection** — ต่อให้ติดก่อน เห็น event `open` กับ `message` ให้ได้
-- [ ] **Step 02: Handshake Deep-Dive** — ดูว่า `Sec-WebSocket-Key` กับ `Accept` มันคำนวณยังไง ทำไมต้องมี
+- [x] **Step 01: Minimal Connection** — ต่อให้ติดก่อน เห็น event `open` กับ `message` ให้ได้
+- [x] **Step 02: Handshake Deep-Dive** — ดูว่า `Sec-WebSocket-Key` กับ `Accept` มันคำนวณยังไง ทำไมต้องมี
 - [ ] **Step 03: Data Framing** — ข้อมูลถูกห่อเป็น frame ยังไง, opcode คืออะไร, FIN bit ทำหน้าที่อะไร
 - [ ] **Step 04: Close Handshake** — connection ปิดตัวยังไง, close code ต่างๆ (1000, 1006, 1011) หมายความว่าอะไร, "ปิดสวย" vs "สายหลุด" ต่างกันยังไง
 
